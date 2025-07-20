@@ -1,0 +1,85 @@
+spring:
+  profiles:
+    active: dev
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      host: ${MONGODB_HOST:localhost}
+      port: ${MONGODB_HOST:27017}
+      username: ${MONGODB_USERNAME:admin}
+      password: ${MONGODB_PASSWORD:mgdevp@ssAdmin++}
+      database: ${MONGODB_DATABASE:ticketing_dev}
+      authentication-database: ${MONGODB_AUTHENTICATION_DATABASE:admin}
+      pool:
+        max-size: 100
+        min-size: 5
+        max-idle-time-ms: 30000
+        max-life-time-ms: 60000
+
+    # Redis Configuration
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:redp@ssAdmin++}
+      timeout: 2000
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 2
+          max-wait: -1ms
+
+# Server Configuration for Development
+server:
+  port: ${SERVER_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
+
+# Management Configuration for Development
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration for Development
+logging:
+  level:
+    root: INFO
+    com.ticketing: DEBUG
+    org.springframework.data.mongodb.core: DEBUG
+    org.springframework.data.redis: DEBUG
+    org.springframework.web: DEBUG
+    reactor.netty: DEBUG
+  file:
+    name: logs/ticketing-core.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+
+# Development specific properties
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:mySecretKey123456789012345678901234567890}
+      expiration: 3600000 # 1 hour for development
+
+  cache:
+    redis:
+      ttl: 300 # 5 minutes for faster development
+
+  business:
+    max-tickets-per-user: 100 # Higher limit for development
+    ticket-expiry-hours: 1 # Shorter expiry for testing
+
+# Development tools
+debug: true
+trace: false
