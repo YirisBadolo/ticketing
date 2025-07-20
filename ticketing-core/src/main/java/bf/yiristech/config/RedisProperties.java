@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Getter
 @Setter
 @Component
@@ -15,7 +17,13 @@ public class RedisProperties {
     private int port = 6379;
     private String password = "redp@ssAdmin++";
     private int timeout = 2000;
-    private PoolProperties jedis = new PoolProperties();
+    private LettuceProperties lettuce = new LettuceProperties();
+
+    @Getter
+    @Setter
+    public static class LettuceProperties {
+        private PoolProperties pool = new PoolProperties();
+    }
 
     @Getter
     @Setter
@@ -23,6 +31,6 @@ public class RedisProperties {
         private int maxActive = 20;
         private int maxIdle = 10;
         private int minIdle = 2;
-        private long maxWait = -1;
+        private Duration maxWait = Duration.ofMillis(-1);  // Handles `-1ms`
     }
 }
